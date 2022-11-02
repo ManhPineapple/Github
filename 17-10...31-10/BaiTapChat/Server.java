@@ -1,6 +1,5 @@
 package BaiTapChat;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,13 +12,10 @@ public class Server {
     boolean stop = false;
 
     List<ServerThread> listOfServerThreads = new LinkedList<>();
-    FileWriter fw;
 
     public Server(int port) throws IOException {
         ss = new ServerSocket(port);
-        fw = new FileWriter("History.txt");
         while(!stop) run();
-        fw.close();
         ss.close();
     }
 
@@ -28,8 +24,6 @@ public class Server {
     }
 
     public void sendMsg(String fromUser, String toUser, String msg) throws IOException {
-        String history = fromUser + " to " + toUser + ": " + msg;
-        fw.write(history);
         String send = fromUser + ": " + msg;
         for (ServerThread serverThread : listOfServerThreads) {
             if (serverThread.user.equals(toUser)) {
@@ -40,7 +34,7 @@ public class Server {
 
     public void sendFile(String fromUser, String toUser, String filename) {
         String send = "File from " + fromUser + ": " + filename;
-        String file = "/home/manhtv/Desktop/BKAV/" + filename;
+        String file = "./" + filename; // /home/manhtv/Desktop/BKAV/
         for (ServerThread serverThread : listOfServerThreads) {
             if (serverThread.user.equals(toUser)) {
                 serverThread.fromServer.add(send);

@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -22,6 +23,7 @@ public class ServerThread implements Runnable {
     BufferedReader input;
 
     List<String> fromServer;
+    FileWriter fw;
 
     Thread thread;
     boolean stop = false;
@@ -33,6 +35,7 @@ public class ServerThread implements Runnable {
         output = new PrintWriter(s.getOutputStream(), true);
         input = new BufferedReader(new InputStreamReader(s.getInputStream()));
         fromServer = new LinkedList<>();
+        fw = new FileWriter("History.txt", true);
         
         thread = new Thread(this);
         thread.start();
@@ -97,9 +100,11 @@ public class ServerThread implements Runnable {
                 if (input.ready()) {
                     String str = input.readLine();
                     if (str.equals("Check online user")) output.println("Online: " + ss.listOfServerThreads.size());
-                    if (str.equals("logout")) {stop = false; ss.remove(this); }
+                    if (str.equals("logout")) {stop = false; ss.remove(this); fw.close();}
                     String arr[] = str.split(" ");
                     if (arr[0].equals("Chat")) {
+                        String history = this.user + " to " + arr[1] + ": " + arr[2];
+                        fw.write(history + "\n");
                         ss.sendMsg(this.user, arr[1], arr[2]);
                     }
                     if (arr[0].equals("File")) {

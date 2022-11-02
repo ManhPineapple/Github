@@ -92,7 +92,7 @@ public class Client {
                     output.println(str);
                     output.flush();
                     if (arr[0].equals("File")) { // File toUser path nameOnRcvClient
-                        sendFile(arr[2]); // "/home/manhtv/Desktop/BKAV/tutorial.py"
+                        sendFile(arr[2]); // /home/manhtv/Desktop/BKAV/Tutorial.py // ./Tutorial.py
                     }
                 }
             } else {
